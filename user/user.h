@@ -1,6 +1,7 @@
 struct stat;
 struct rtcdate;
-
+//添加结构体声明
+struct sysinfo;
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -23,6 +24,10 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+//新增trace函数声明
+int trace(int);
+//新增sysinfo函数声明
+int sysinfo(struct sysinfo *);
 
 // ulib.c
 int stat(const char*, struct stat*);

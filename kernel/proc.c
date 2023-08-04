@@ -21,6 +21,19 @@ static void freeproc(struct proc *p);
 
 extern char trampoline[]; // trampoline.S
 
+//获取可用进程数
+int
+proc_num(void){
+ struct proc *p;
+ uint64 num=0;
+ for(p=proc;p<&proc[NPROC];p++){
+  if(p->state !=UNUSED){
+   num++;
+   }
+   }
+   return num;
+ }
+ 
 // initialize the proc table at boot time.
 void
 procinit(void)
@@ -275,6 +288,8 @@ fork(void)
   }
   np->sz = p->sz;
 
+//将trace_mask拷贝到子进程
+  safestrcpy(np->mask, p->mask, sizeof(p->mask));
   np->parent = p;
 
   // copy saved user registers.
@@ -290,7 +305,7 @@ fork(void)
   np->cwd = idup(p->cwd);
 
   safestrcpy(np->name, p->name, sizeof(p->name));
-
+  
   pid = np->pid;
 
   np->state = RUNNABLE;
