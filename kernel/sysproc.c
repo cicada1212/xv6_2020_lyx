@@ -70,6 +70,8 @@ sys_sleep(void)
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+  //call backtrace
+  backtrace();
   return 0;
 }
 
@@ -95,3 +97,25 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+//添加函数实现
+uint64
+sys_sigalarm(void){
+ struct proc* myProc = myproc();
+ int n;
+ uint64 handler;
+ if(argint(0,&n)<0)
+   return -1;
+ myProc->interval = n;
+ if(argaddr(1,&handler)<0)
+   return -1;
+ myProc->handler = (void(*)())handler;
+ return 0;
+ }
+ uint
+ sys_sigreturn(void){
+  struct proc* myProc = myproc();
+  switchTrapframe(myProc->trapframe,myProc->trapframeSave);
+  myProc->waitReturn=0;
+   return 0;
+ }
+
